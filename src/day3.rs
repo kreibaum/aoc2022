@@ -101,6 +101,9 @@ pub fn day3(filename: &str) -> (usize, usize) {
     (shared_score as usize, badge_score as usize)
 }
 
+/// Represents a rucksack with two compartments
+/// Each compartment can contain any number of items
+/// If I ever want to make this more efficient, I can use a bitset.
 struct Rucksack {
     first: HashSet<char>,
     second: HashSet<char>,
