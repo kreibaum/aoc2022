@@ -1,6 +1,5 @@
-use inpt::Inpt;
-
 use crate::util::*;
+use lazy_regex::regex_captures;
 
 // --- Day 4: Camp Cleanup ---
 
@@ -62,50 +61,73 @@ use crate::util::*;
 
 // In how many assignment pairs do the ranges overlap?
 
-#[derive(Inpt)]
-#[inpt(regex = r"([0-9]+)-([0-9]+),([0-9]+)-([0-9]+)")]
-struct RangePair {
-    start1: u32,
-    end1: u32,
-    start2: u32,
-    end2: u32,
+struct Range {
+    start: u32,
+    end: u32,
 }
 
-pub fn day4(filename: &str) {
+impl Range {
+    /// Check if the range fully contains the given other range.
+    fn contains(&self, other: &Range) -> bool {
+        self.start <= other.start && self.end >= other.end
+    }
+    /// Check if the range overlaps with the given other range.
+    /// This is only false, if the ranges are disjoint.
+    /// We check this by checking if one range is fully in front or behind the other.
+    fn overlaps(&self, other: &Range) -> bool {
+        !(self.end < other.start || self.start > other.end)
+    }
+}
+
+fn parse_line(line: &str) -> (Range, Range) {
+    let captures = regex_captures!(r"^(\d+)-(\d+),(\d+)-(\d+)$", line).unwrap();
+    let r1 = Range {
+        start: captures.1.parse().unwrap(),
+        end: captures.2.parse().unwrap(),
+    };
+    let r2 = Range {
+        start: captures.3.parse().unwrap(),
+        end: captures.4.parse().unwrap(),
+    };
+    (r1, r2)
+}
+
+pub fn day4(filename: &str) -> (u32, u32) {
     let input = read_file(filename);
 
-    let mut ranges: Vec<RangePair> = Vec::new();
-    for line in input.lines() {
-        let rp = inpt::inpt(line).unwrap();
-        ranges.push(rp);
-    }
+    let ranges: Vec<(Range, Range)> = input.lines().map(parse_line).collect();
 
     // Check if either range fully contains the other range
-    let mut count = 0;
-    for r in &ranges {
-        if (r.start1 <= r.start2 && r.end1 >= r.end2) || (r.start2 <= r.start1 && r.end2 >= r.end1)
-        {
-            count += 1;
+    let mut count_fully_contained = 0;
+    for (r1, r2) in &ranges {
+        if r1.contains(r2) || r2.contains(r1) {
+            count_fully_contained += 1;
         }
     }
 
-    println!("Day 4: {}", count);
+    println!("Day 4: {}", count_fully_contained);
 
     // Part 2: Check if the ranges overlap at all
-
-    let mut count = 0;
-    for r in &ranges {
+    let mut count_overlaps = 0;
+    for (r1, r2) in &ranges {
         // If either bound is within the other range, they overlap
         // If a range completely contains the other, they overlap
-        if (r.start1 >= r.start2 && r.start1 <= r.end2)
-            || (r.end1 >= r.start2 && r.end1 <= r.end2)
-            || (r.start2 >= r.start1 && r.start2 <= r.end1)
-            || (r.end2 >= r.start1 && r.end2 <= r.end1)
-            || (r.start1 <= r.start2 && r.end1 >= r.end2)
-            || (r.start2 <= r.start1 && r.end2 >= r.end1)
-        {
-            count += 1;
+        if r1.overlaps(r2) {
+            count_overlaps += 1;
         }
     }
-    println!("Day 4: {}", count);
+    println!("Day 4: {}", count_overlaps);
+
+    (count_fully_contained, count_overlaps)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_day4() {
+        assert_eq!(day4("day4-test.txt"), (2, 4));
+        assert_eq!(day4("day4.txt"), (560, 839));
+    }
 }

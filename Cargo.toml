@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 inpt = "0.1.1"
+lazy-regex = " 2.3.1"
