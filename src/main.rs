@@ -3,6 +3,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 mod util;
 
 fn main() {
@@ -14,4 +15,6 @@ fn main() {
     day4::day4("day4.txt");
     day5::day5("day5-test.txt", 3, 3);
     day5::day5("day5.txt", 9, 8);
+    day6::day6("day6-test.txt");
+    day6::day6("day6.txt");
 }
