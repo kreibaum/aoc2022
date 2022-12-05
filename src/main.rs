@@ -12,6 +12,6 @@ fn main() {
     day3::day3("day3.txt");
     day4::day4("day4-test.txt");
     day4::day4("day4.txt");
-    day5::day5("day5-test.txt");
-    day5::day5("day5.txt");
+    day5::day5("day5-test.txt", 3, 3);
+    day5::day5("day5.txt", 9, 8);
 }
