@@ -1,3 +1,4 @@
+use crate::datastream::*;
 use crate::util::*;
 
 // --- Day 6: Tuning Trouble ---
@@ -52,26 +53,11 @@ use crate::util::*;
 pub fn day6(filename: &str) {
     let input = read_file(filename);
 
-    let input: Vec<char> = input.chars().collect();
+    // Turn the input into a vector of integers in the 0..26 range.
+    let input: Vec<u8> = input_to_u8s(&input);
 
-    let mut start_index = 0;
-    loop {
-        // check if the next 4 characters are all different
-        let mut different = true;
-        for i in 0..14 {
-            for j in 0..14 {
-                if i != j && input[start_index + i] == input[start_index + j] {
-                    different = false;
-                }
-            }
-        }
-        if different {
-            break;
-        }
-        start_index += 1;
-    }
-    println!("Day 6: {}", start_index);
+    let (_, end4) = find_start_of_message_marker(4, &input);
+    let (_, end14) = find_start_of_message_marker(14, &input);
 
-    // Part 2 actually needs to check for 14 different characters
-    // this is probably to slow for the old algorithm?
+    println!("Day 6: {}, {}", end4, end14);
 }
