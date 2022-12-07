@@ -2,5 +2,6 @@
     "cSpell.words": [
         "datastream",
         "Inpt"
-    ]
+    ],
+    "editor.formatOnSave": true
 }
