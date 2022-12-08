@@ -22,6 +22,6 @@ fn main() {
     day6::day6("day6.txt");
     day7::day7("day7-test.txt");
     day7::day7("day7.txt");
-    day8::day8("day8-test.txt");
+    //day8::day8("day8-test.txt");
     day8::day8("day8.txt");
 }
